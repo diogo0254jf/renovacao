@@ -25,6 +25,8 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "express-validator": "^6.9.2",
+    "fs": "^0.0.1-security",
+    "google-spreadsheet": "^3.3.0",
     "http": "0.0.1-security",
     "mime-types": "^2.1.32",
     "mysql2": "^2.3.3",

@@ -1,6 +1,7 @@
 // numero usado = 32988523276
 const { Client, LocalAuth, MessageMedia, Contact, List, Location, Buttons } = require('whatsapp-web.js');
 const express = require('express');
+const fs = require('fs')
 const { body, validationResult } = require('express-validator');
 const socketIO = require('socket.io');
 const qrcode = require('qrcode');
@@ -8,7 +9,7 @@ const http = require('http');
 const fileUpload = require('express-fileupload');
 const axios = require('axios');
 const mime = require('mime-types');
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8001;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -43,45 +44,46 @@ const client = new Client({
     ] }
 });
 
+
 client.initialize();
 
 io.on('connection', function(socket) {
-  socket.emit('message', '© BOT-ZDG - Iniciado');
+  socket.emit('message', 'Iniciado');
   
 
 client.on('qr', (qr) => {
     console.log('QR RECEIVED', qr);
     qrcode.toDataURL(qr, (err, url) => {
       socket.emit('qr', url);
-      socket.emit('message', '© BOT-ZDG QRCode recebido, aponte a câmera  seu celular!');
+      socket.emit('message', 'QRCode recebido, aponte a câmera  seu celular!');
     });
 });
 
 client.on('ready', () => {
-    socket.emit('ready', '© BOT-ZDG Dispositivo pronto!');
-    socket.emit('message', '© BOT-ZDG Dispositivo pronto!');
+    socket.emit('ready', 'Dispositivo pronto!');
+    socket.emit('message', 'Dispositivo pronto!');
     socket.emit('qr', './check.svg')	
-    console.log('© BOT-ZDG Dispositivo pronto');
+    console.log('Dispositivo pronto');
 });
 
 client.on('authenticated', () => {
-    socket.emit('authenticated', '© BOT-ZDG Autenticado!');
-    socket.emit('message', '© BOT-ZDG Autenticado!');
-    console.log('© BOT-ZDG Autenticado');
+    socket.emit('authenticated', 'Autenticado!');
+    socket.emit('message', 'Autenticado!');
+    console.log('Autenticado');
 });
 
 client.on('auth_failure', function() {
-    socket.emit('message', '© BOT-ZDG Falha na autenticação, reiniciando...');
-    console.error('© BOT-ZDG Falha na autenticação');
+    socket.emit('message', 'Falha na autenticação, reiniciando...');
+    console.error('Falha na autenticação');
 });
 
 client.on('change_state', state => {
-  console.log('© BOT-ZDG Status de conexão: ', state );
+  console.log('Status de conexão: ', state );
 });
 
 client.on('disconnected', (reason) => {
-  socket.emit('message', '© BOT-ZDG Cliente desconectado!');
-  console.log('© BOT-ZDG Cliente desconectado', reason);
+  socket.emit('message', 'Cliente desconectado!');
+  console.log('Cliente desconectado', reason);
   client.initialize();
 });
 });
@@ -89,7 +91,7 @@ client.on('disconnected', (reason) => {
 
 app.post('/send-audio', async (req, res) => {
   const number = req.body.number;
-  const filePath = "audio.ogg";
+  const filePath = "./images/audio.opus";
 
   const cinco = number.length;
   const numberDDD = number.substr(0, 2);
@@ -187,13 +189,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
         res.status(200).json({
           status: true,
-          message: 'BOT-ZDG Mensagem enviada',
+          message: 'Mensagem enviada',
           response: response
         });
         }).catch(err => {
           res.status(500).json({
             status: false,
-            message: 'BOT-ZDG Mensagem não enviada',
+            message: 'Mensagem não enviada',
             response: err.text
           });
         });
@@ -202,13 +204,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'BOT-ZDG Mensagem enviada',
+        message: 'Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'BOT-ZDG Mensagem não enviada',
+        message: 'Mensagem não enviada',
         response: err.text
       });
       });
@@ -219,13 +221,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'BOT-ZDG Mensagem enviada',
+        message: 'Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'BOT-ZDG Mensagem não enviada',
+        message: 'Mensagem não enviada',
         response: err.text
       });
       });
@@ -235,13 +237,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'BOT-ZDG Mensagem enviada',
+        message: 'Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'BOT-ZDG Mensagem não enviada',
+        message: 'Mensagem não enviada',
         response: err.text
       });
       });
@@ -272,13 +274,13 @@ app.post('/send-media', async (req, res) => {
     client.sendMessage(numberZDG, media, {caption: caption}).then(response => {
     res.status(200).json({
       status: true,
-      message: 'BOT-ZDG Imagem enviada',
+      message: 'Imagem enviada',
       response: response
     });
     }).catch(err => {
     res.status(500).json({
       status: false,
-      message: 'BOT-ZDG Imagem não enviada',
+      message: 'Imagem não enviada',
       response: err.text
     });
     });
@@ -289,30 +291,84 @@ app.post('/send-media', async (req, res) => {
     client.sendMessage(numberZDG, media, {caption: caption}).then(response => {
     res.status(200).json({
       status: true,
-      message: 'BOT-ZDG Imagem enviada',
+      message: 'Imagem enviada',
       response: response
     });
     }).catch(err => {
     res.status(500).json({
       status: false,
-      message: 'BOT-ZDG Imagem não enviada',
+      message: 'Imagem não enviada',
       response: err.text
     });
     });
   }
 });
 
+app.post("/updateValue", async (req, res) => {
+  const { googleSheets, auth, spreadsheetId } = await getAuthSheets();
+
+  const { values } = req.body;
+
+  const updateValue = await googleSheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: "Página1!A2:C2",
+    valueInputOption: "USER_ENTERED",
+    resource: {
+      values: values,
+    },
+  });
+
+  res.send(updateValue.data);
+});
+
 client.on('message', async msg => {
+
   if (msg.body.toLowerCase() === 'sim' || msg.body.toLowerCase() === 'ss' || msg.body.toLowerCase() === 's') {
-    const contact = await msg.short();
+    const contact = await msg.getContact();
     number = msg.from
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
+    var texto = `${numberUser} respondeu ${msg.body}\n`
+    fs.appendFile("./poliana/sim.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Fico feliz que tenha se interessado em saber mais sobre!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
-    client.sendMessage("553288733055@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no plano de parceria!\nEntre em contato através do link: https://wa.me/${numberUser}`)
+    client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no certificado digital!\nEntre em contato através do link: https://wa.me/${numberUser}`)
   }
   else if (msg.body.toLowerCase() === 'não' || msg.body.toLowerCase() === 'nn' || msg.body.toLowerCase() === 'n' || msg.body.toLowerCase() === 'nao') {
+    const contact = await msg.getContact();
+    number = msg.from
+    const name = contact.pushname
+    const numberUser = number.substr(0, 12);
+    var texto = `${numberUser} respondeu ${msg.body} não quer mais receber mensagem\n`
+    fs.appendFile("./poliana/nao.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Tudo bem! Agradeço seu retorno!\nSeu numero ja foi tirado de nossas listas!\nMas sinta-se a vontade a entrar em contato caso mude de ideia! só digitar: Sim.");
+  }
+  else if (msg.body.toLowerCase() === '1') {
+    const contact = await msg.getContact();
+    number = msg.from
+    const name = contact.pushname
+    const numberUser = number.substr(0, 12);
+    var texto = `${numberUser} respondeu ${msg.body}\n`
+    fs.appendFile("./poliana/sim.txt", texto, (err) => {});
+    client.sendMessage(msg.from, "Fico feliz que tenha se interessado!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
+    client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no modelo e-CNPJ A1!\nEntre em contato através do link: https://wa.me/${numberUser}`)
+  }
+  else if (msg.body.toLowerCase() === '2') {
+    const contact = await msg.getContact();
+    number = msg.from
+    const name = contact.pushname
+    const numberUser = number.substr(0, 12);
+    var texto = `${numberUser} respondeu ${msg.body} quer outro tipo de certificado\n`
+    fs.appendFile("./poliana/nao.txt", texto, (err) => {});
+    client.sendMessage(msg.from, "Fico feliz que tenha se interessado!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
+    client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado em outro modelo do certificado digital!\nEntre em contato através do link: https://wa.me/${numberUser}`)
+  }
+  else if (msg.body != null) {
+    const contact = await msg.getContact();
+    number = msg.from
+    const name = contact.pushname
+    const numberUser = number.substr(0, 12);
+    var texto = `${numberUser} respondeu ${msg.body}\n`
+    fs.appendFile("./poliana/todos.txt", texto, (err) => {});
   }
 
 });
