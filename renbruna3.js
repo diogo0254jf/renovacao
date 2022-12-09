@@ -9,7 +9,7 @@ const http = require('http');
 const fileUpload = require('express-fileupload');
 const axios = require('axios');
 const mime = require('mime-types');
-const port = process.env.PORT || 8002;
+const port = process.env.PORT || 8004;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 const client = new Client({
-  authStrategy: new LocalAuth({ clientId: 'poliana' }),
+  authStrategy: new LocalAuth({ clientId: 'brunasp' }),
   puppeteer: { headless: true,
     args: [
       '--no-sandbox',
@@ -39,7 +39,7 @@ const client = new Client({
       '--disable-accelerated-2d-canvas',
       '--no-first-run',
       '--no-zygote',
-      '--single-process', // <- this one doesn't works in Windows
+      '--single-process', // <this one doesn't works in Windows
       '--disable-gpu'
     ] }
 });
@@ -87,7 +87,6 @@ client.on('disconnected', (reason) => {
   client.initialize();
 });
 });
-
 
 app.post('/send-audio', async (req, res) => {
   const number = req.body.number;
@@ -189,13 +188,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
         res.status(200).json({
           status: true,
-          message: 'Mensagem enviada',
+          message: 'BOT-ZDG Mensagem enviada',
           response: response
         });
         }).catch(err => {
           res.status(500).json({
             status: false,
-            message: 'Mensagem não enviada',
+            message: 'BOT-ZDG Mensagem não enviada',
             response: err.text
           });
         });
@@ -204,13 +203,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'Mensagem enviada',
+        message: 'BOT-ZDG Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'Mensagem não enviada',
+        message: 'BOT-ZDG Mensagem não enviada',
         response: err.text
       });
       });
@@ -221,13 +220,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'Mensagem enviada',
+        message: 'BOT-ZDG Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'Mensagem não enviada',
+        message: 'BOT-ZDG Mensagem não enviada',
         response: err.text
       });
       });
@@ -237,13 +236,13 @@ app.post('/send-message', [
       client.sendMessage(numberZDG, message).then(response => {
       res.status(200).json({
         status: true,
-        message: 'Mensagem enviada',
+        message: 'BOT-ZDG Mensagem enviada',
         response: response
       });
       }).catch(err => {
       res.status(500).json({
         status: false,
-        message: 'Mensagem não enviada',
+        message: 'BOT-ZDG Mensagem não enviada',
         response: err.text
       });
       });
@@ -274,13 +273,13 @@ app.post('/send-media', async (req, res) => {
     client.sendMessage(numberZDG, media, {caption: caption}).then(response => {
     res.status(200).json({
       status: true,
-      message: 'Imagem enviada',
+      message: 'BOT-ZDG Imagem enviada',
       response: response
     });
     }).catch(err => {
     res.status(500).json({
       status: false,
-      message: 'Imagem não enviada',
+      message: 'BOT-ZDG Imagem não enviada',
       response: err.text
     });
     });
@@ -291,13 +290,13 @@ app.post('/send-media', async (req, res) => {
     client.sendMessage(numberZDG, media, {caption: caption}).then(response => {
     res.status(200).json({
       status: true,
-      message: 'Imagem enviada',
+      message: 'BOT-ZDG Imagem enviada',
       response: response
     });
     }).catch(err => {
     res.status(500).json({
       status: false,
-      message: 'Imagem não enviada',
+      message: 'BOT-ZDG Imagem não enviada',
       response: err.text
     });
     });
@@ -312,9 +311,9 @@ client.on('message', async msg => {
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
     var texto = `${numberUser} respondeu ${msg.body}\n`
-    fs.appendFile("./poliana/sim.txt", texto, (err) => {});
+    fs.appendFile("./bruna/sim.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Fico feliz que tenha se interessado em saber mais sobre!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
-    client.sendMessage("553288212435@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no certificado digital!\nEntre em contato através do link: https://wa.me/${numberUser}`)
+    client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no certificado digital!\nEntre em contato através do link: https://wa.me/${numberUser}`)
   }
   else if (msg.body.toLowerCase() === 'não' || msg.body.toLowerCase() === 'nn' || msg.body.toLowerCase() === 'n' || msg.body.toLowerCase() === 'nao') {
     const contact = await msg.getContact();
@@ -322,7 +321,7 @@ client.on('message', async msg => {
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
     var texto = `${numberUser} respondeu ${msg.body} não quer mais receber mensagem\n`
-    fs.appendFile("./poliana/nao.txt", texto, (err) => {});
+    fs.appendFile("./bruna/nao.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Tudo bem! Agradeço seu retorno!\nSeu numero ja foi tirado de nossas listas!\nMas sinta-se a vontade a entrar em contato caso mude de ideia! só digitar: Sim.");
   }
   else if (msg.body.toLowerCase() === '1') {
@@ -331,7 +330,7 @@ client.on('message', async msg => {
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
     var texto = `${numberUser} respondeu ${msg.body}\n`
-    fs.appendFile("./poliana/sim.txt", texto, (err) => {});
+    fs.appendFile("./bruna/sim.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Fico feliz que tenha se interessado!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
     client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado no modelo e-CNPJ A1!\nEntre em contato através do link: https://wa.me/${numberUser}`)
   }
@@ -341,7 +340,7 @@ client.on('message', async msg => {
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
     var texto = `${numberUser} respondeu ${msg.body} quer outro tipo de certificado\n`
-    fs.appendFile("./poliana/nao.txt", texto, (err) => {});
+    fs.appendFile("./bruna/nao.txt", texto, (err) => {});
     client.sendMessage(msg.from, "Fico feliz que tenha se interessado!\n\nEstou encaminhando seu numero para nossa equipe especializada e ja entrarão em contato com voçe.");
     client.sendMessage("553288685729@c.us", `[Nome]: ${name}\n[NUMERO]: ${numberUser}\n[MENSAGEM]: ${msg.body}\nInteressado em outro modelo do certificado digital!\nEntre em contato através do link: https://wa.me/${numberUser}`)
   }
@@ -351,7 +350,7 @@ client.on('message', async msg => {
     const name = contact.pushname
     const numberUser = number.substr(0, 12);
     var texto = `${numberUser} respondeu ${msg.body}\n`
-    fs.appendFile("./poliana/todos.txt", texto, (err) => {});
+    fs.appendFile("./bruna/todos.txt", texto, (err) => {});
   }
 
 });

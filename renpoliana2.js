@@ -9,7 +9,7 @@ const http = require('http');
 const fileUpload = require('express-fileupload');
 const axios = require('axios');
 const mime = require('mime-types');
-const port = process.env.PORT || 8002;
+const port = process.env.PORT || 8003;
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 const client = new Client({
-  authStrategy: new LocalAuth({ clientId: 'poliana' }),
+  authStrategy: new LocalAuth({ clientId: 'poliana2' }),
   puppeteer: { headless: true,
     args: [
       '--no-sandbox',
